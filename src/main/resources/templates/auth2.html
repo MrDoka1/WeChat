@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+</head>
+<body>
+
+<h4><em>Registration</em></h4>
+<form action="/auth" method="post">
+  <div class="text-field">
+    <label class="text-field__label" for="firstname"> Имя </label>
+    <input class="text-field__input" type="text" name="firstname" id="firstname"/>
+  </div>
+  <div class="text-field">
+    <label class="text-field__label" for="lastname"> Фамилия </label>
+    <input class="text-field__input" type="text" name="lastname" id="lastname"/>
+  </div>
+  <div class="text-field">
+    <label class="text-field__label" for="birthdate"> Дата рождения </label>
+    <input class="text-field__input" type="date" name="birthdate" id="birthdate"/>
+  </div>
+  <div class="text-field">
+    <label class="text-field__label" for="nick"> Если хотите введите ник </label>
+    <input class="text-field__input" type="text" name="nick" id="nick"/>
+  </div>
+  <div><input type="submit" class="submit-button" value="Sign In"/></div>
+</form>
+
+</body>
+</html>
