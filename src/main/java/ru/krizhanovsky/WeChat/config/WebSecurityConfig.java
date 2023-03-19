@@ -6,25 +6,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import ru.krizhanovsky.WeChat.service.UserService;
 
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
     @Autowired
-    private DataSource dataSource;
+    private UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
 
-                        .antMatchers("/", "/auth", "/login", "/profile").permitAll()
+                        .requestMatchers("/", "/auth", "/login", "/profile").permitAll()
 
                         .anyRequest().authenticated()
                 .and()
@@ -40,17 +41,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return http.build();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("select email,password,enabled "
-                        + "from bael_users "
-                        + "where email = ?")
-                .authoritiesByUsernameQuery("select email,authority "
-                        + "from authorities "
-                        + "where email = ?");
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService)
+                .passwordEncoder(new BCryptPasswordEncoder());
     }
 }

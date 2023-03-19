@@ -23,10 +23,8 @@ public class LoginController {
     @PostMapping("/login1")
     public String postLogin(Model model, @RequestParam String phonenumber, @RequestParam String password) {
         System.out.println(phonenumber + password);
-        List<UserAuth> users = usersAuthRepository.findByPhonenumber(phonenumber);
-        if (users.size() > 0) {
-            Password password1 = new Password();
-        }
+        UserAuth users = usersAuthRepository.findByPhonenumber(phonenumber);
+        // Что-то странное
 
         return "redirect:/auth";
     }
