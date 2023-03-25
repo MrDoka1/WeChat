@@ -8,6 +8,9 @@
 
 <h1 th:text="|${firstname} ${lastname}|"></h1>
 <div th:text="${birthdate}"></div>
+<div th:text="|${age} age.|"></div>
+<button th:if="${friend}">Написать сообщение</button>
+<button th:if="${no_friend}">Добавить в друзья</button>
 
 </body>
 </html>

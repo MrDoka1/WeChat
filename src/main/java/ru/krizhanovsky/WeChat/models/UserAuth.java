@@ -1,99 +1,79 @@
 package ru.krizhanovsky.WeChat.models;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import ru.krizhanovsky.WeChat.classes.Password;
-
-import java.util.Collection;
-import java.util.Set;
 
 // ***** База данных для аутентификации пользователей *****
 @Entity
 @Table(name = "users_auth")
-public class UserAuth implements UserDetails {
+public class UserAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    private String phonenumber;
+    private String email;
     private String password;
-    private boolean is_twofactor_auth;
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.LAZY)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "id"))
-    @Enumerated(EnumType.STRING)
-    private Set<Role> role;
+
+    private String firstName;
+    private String lastName;
+    private String bithdate;
+
 
     public UserAuth() {
     }
 
-    public UserAuth(String phonenumber, String password, boolean is_twofactor_auth) {
-        Password password1 = new Password();
-
-        this.phonenumber = phonenumber;
-        this.password = password1.encodePassword(password);
-        this.is_twofactor_auth = is_twofactor_auth;
+    public UserAuth(String email, String password, String firstName, String lastName, String bithdate) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bithdate = bithdate;
     }
 
-    public String getPhonenumber() {
-        return phonenumber;
+    public Long getId() {
+        return id;
     }
 
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRole();
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
         return password;
     }
 
-    @Override
-    public String getUsername() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return isEnabled();
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public boolean isIs_twofactor_auth() {
-        return is_twofactor_auth;
+    public String getBithdate() {
+        return bithdate;
     }
 
-    public void setIs_twofactor_auth(boolean is_twofactor_auth) {
-        this.is_twofactor_auth = is_twofactor_auth;
-    }
-
-    public Set<Role> getRole() {
-        return role;
-    }
-
-    public void setRole(Set<Role> role) {
-        this.role = role;
+    public void setBithdate(String bithdate) {
+        this.bithdate = bithdate;
     }
 }

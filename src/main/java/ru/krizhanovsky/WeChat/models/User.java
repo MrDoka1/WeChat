@@ -21,7 +21,10 @@ public class User {
     @Column(name = "birth_date")
     private String birthDate;
     private boolean privateProfile;
-
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.LAZY)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<Role> role;
 
 
     public User() {
@@ -82,5 +85,13 @@ public class User {
 
     public void setPrivateProfile(boolean privateProfile) {
         this.privateProfile = privateProfile;
+    }
+
+    public Set<Role> getRole() {
+        return role;
+    }
+
+    public void setRole(Set<Role> role) {
+        this.role = role;
     }
 }
