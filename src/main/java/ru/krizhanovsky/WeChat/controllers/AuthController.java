@@ -10,6 +10,8 @@ import ru.krizhanovsky.WeChat.classes.Password;
 import ru.krizhanovsky.WeChat.models.UserAuth;
 import ru.krizhanovsky.WeChat.repos.UsersAuthRepository;
 
+import java.security.Principal;
+
 
 @Controller
 public class AuthController {
@@ -17,7 +19,10 @@ public class AuthController {
     private UsersAuthRepository usersAuthRepository;
 
     @GetMapping("/auth")
-    public String auth(Model model) {
+    public String auth(Principal principal) {
+        if(principal != null) {
+            return "redirect:/profile";
+        }
         return "auth";
     }
 

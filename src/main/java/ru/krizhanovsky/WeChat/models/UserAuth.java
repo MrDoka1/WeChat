@@ -1,7 +1,9 @@
 package ru.krizhanovsky.WeChat.models;
 
 import jakarta.persistence.*;
-import ru.krizhanovsky.WeChat.classes.Password;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 // ***** База данных для аутентификации пользователей *****
 @Entity
@@ -15,7 +17,9 @@ public class UserAuth {
 
     private String firstName;
     private String lastName;
-    private String bithdate;
+    private String birthdate;
+    @Column(name = "last_online")
+    private LocalDateTime lastOnline;
 
 
     public UserAuth() {
@@ -26,7 +30,8 @@ public class UserAuth {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.bithdate = bithdate;
+        this.birthdate = bithdate;
+        this.lastOnline = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -69,11 +74,23 @@ public class UserAuth {
         this.password = password;
     }
 
-    public String getBithdate() {
-        return bithdate;
+    public String getBirthdate() {
+        return birthdate;
     }
 
-    public void setBithdate(String bithdate) {
-        this.bithdate = bithdate;
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public LocalDateTime getLastOnline() {
+        return lastOnline;
+    }
+
+    public void setLastOnline(LocalDateTime lastOnline) {
+        this.lastOnline = lastOnline;
+    }
+
+    public boolean isOnline() {
+        return this.lastOnline.until(LocalDateTime.now(), ChronoUnit.SECONDS) < 6;
     }
 }

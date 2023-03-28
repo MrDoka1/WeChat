@@ -6,10 +6,14 @@
 </head>
 <body>
 
+<div th:insert="blocks/nav-menu :: nav-menu"></div>
+
 <h1 th:text="|${firstname} ${lastname}|"></h1>
 <div th:text="${birthdate}"></div>
 <div th:text="|${age} age.|"></div>
-<button th:if="${friend}">Написать сообщение</button>
+<div th:if="${online}" style="color: green">В сети</div>
+<div th:if="not ${online}" style="color: grey">Не в сети</div>
+<button th:if="${sendMessage}"><a th:href="|/im?sel=${id}|">Написать сообщение</a></button>
 <button th:if="${no_friend}">Добавить в друзья</button>
 
 </body>

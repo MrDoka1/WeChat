@@ -1,6 +1,5 @@
 package ru.krizhanovsky.WeChat.controllers;
 
-import org.hibernate.query.sqm.TemporalUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import ru.krizhanovsky.WeChat.repos.UsersRepository;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.Year;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
@@ -27,6 +25,7 @@ public class ProfilesController {
 
     FindUser findUser = new FindUser();
 
+    // *** Перенаправляет на свою страницу ***
     @GetMapping("/profile")
     public String profil(Model model, Principal principal) {
         long id = findUser.getUser(usersAuthRepository, principal.getName()).getId();
@@ -35,28 +34,26 @@ public class ProfilesController {
 
     @GetMapping("/profile/{nick}")
     public String profile(Model model, Principal principal, @PathVariable(value = "nick") String nick) {
-//        List<User> users = usersRepository.findByNick(nick);
-//        if (users.size() > 0) {
-//            for (User user : users) {
-//                model.addAttribute("firstname", user.getFirstName());
-//                model.addAttribute("lastname", user.getLastName());
-//                model.addAttribute("birthdate", user.getBirthDate());
-//            }
-//            return "profile";
-//        }
 
         Optional<UserAuth> user = usersAuthRepository.findById(Long.valueOf(nick));
+        UserAuth userAuth = findUser.getUser(usersAuthRepository, principal.getName());
         if (user.isEmpty()) {
+            //Написать вывод ошибки
             return "redirect:/profile";
         }
 
+        model.addAttribute("id", user.get().getId());
         model.addAttribute("firstname", user.get().getFirstName());
         model.addAttribute("lastname", user.get().getLastName());
-        model.addAttribute("birthdate", user.get().getBithdate());
+        model.addAttribute("birthdate", user.get().getBirthdate());
         model.addAttribute("date", LocalDate.now());
-        model.addAttribute("age", ChronoUnit.YEARS.between(LocalDate.parse(user.get().getBithdate()), LocalDate.now()));
-        model.addAttribute("friend", true);
-        model.addAttribute("no_friend", true);
+        model.addAttribute("age", ChronoUnit.YEARS.between(LocalDate.parse(user.get().getBirthdate()), LocalDate.now()));
+        model.addAttribute("online", true);
+        if (!user.get().getId().equals(userAuth.getId())) {
+            model.addAttribute("online", user.get().isOnline());
+            model.addAttribute("sendMessage", true);
+            model.addAttribute("no_friend", true);
+        }
 
 
         return "profile";
