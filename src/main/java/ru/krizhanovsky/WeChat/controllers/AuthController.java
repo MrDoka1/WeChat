@@ -36,7 +36,7 @@ public class AuthController {
                 // Вторая страница регистрации
                 if (firstname != null && lastname != null && birthdate != null && !firstname.isEmpty() && !lastname.isEmpty() && !birthdate.isEmpty()) {
                     Password password1 = new Password();
-                    UserAuth userAuth = new UserAuth(email, password1.encodePassword(password), firstname, lastname, birthdate);
+                    UserAuth userAuth = new UserAuth(email, password1.encodePassword(password));
                     usersAuthRepository.save(userAuth);
                     return "redirect:/login";
 

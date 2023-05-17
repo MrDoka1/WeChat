@@ -41,14 +41,17 @@ public class WebSecurityConfig {
         http
                 .authorizeRequests()
 
-                    .requestMatchers("/auth", "/login").permitAll()
+                    .requestMatchers("/auth", "/login", "/css/**", "/js/**").permitAll()
 
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
-                    .loginPage("/login").defaultSuccessUrl("/profile") // Поменять
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/profile") // Поменять
                 .and()
-                    .logout().permitAll();
+                    .logout()
+                    .deleteCookies("JSESSIONID")
+                    .permitAll();
 
         http.csrf().disable();
 

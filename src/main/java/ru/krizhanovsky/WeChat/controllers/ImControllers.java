@@ -1,31 +1,40 @@
 package ru.krizhanovsky.WeChat.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.krizhanovsky.WeChat.classes.FindPrivateChat;
 import ru.krizhanovsky.WeChat.classes.FindUser;
-import ru.krizhanovsky.WeChat.models.UserAuth;
+import ru.krizhanovsky.WeChat.models.PrivateChat;
+import ru.krizhanovsky.WeChat.models.User;
 import ru.krizhanovsky.WeChat.repos.PrivateChatsRepository;
 import ru.krizhanovsky.WeChat.repos.UsersAuthRepository;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ImControllers {
 
     @Autowired
     UsersAuthRepository usersAuthRepository;
-    FindUser findUser = new FindUser();
+    @Autowired
+    FindUser findUser;
+    @Autowired
+    FindPrivateChat findPrivateChat;
     @Autowired
     PrivateChatsRepository privateChatsRepository;
-    FindPrivateChat findPrivateChat = new FindPrivateChat();
 
     @GetMapping("/im")
     public String im(Model model, Principal principal, @RequestParam(value = "sel", required = false) String sel) {
-        UserAuth userAuth = findUser.getUser(usersAuthRepository, principal.getName());
+        // *** Конструкция для всех страниц ***
+        User user = findUser.getUser(principal.getName());
+        model.addAttribute("userId", user.getId());
+        // *** *** *** *** *** *** *** *** ***
 
 
         if (sel != null && !sel.isEmpty()) {
@@ -35,16 +44,20 @@ public class ImControllers {
                 System.out.println(sel);
             } else {
                 // ** Получаем собеседника **
-                UserAuth userAuthInterlocutor = usersAuthRepository.findById(Long.parseLong(sel)).get();
-                model.addAttribute("interlocutor", userAuthInterlocutor);
+                Optional<User> userInterlocutorOptional = findUser.getUser(Long.parseLong(sel));
+                model.addAttribute("interlocutor", userInterlocutorOptional.get());
 
-                long id = findPrivateChat.getPrivateChatId(userAuth.getId(), Long.parseLong(sel), privateChatsRepository);
+                long id = findPrivateChat.getPrivateChatId(user.getId(), Long.parseLong(sel));
                 if (id != 0) {
                     model.addAttribute("id", id);
-                    model.addAttribute("userId", userAuth.getId());
                     return "imSel";
                 }
             }
+        }
+
+        List<PrivateChat> privateChatList = (List<PrivateChat>) privateChatsRepository.findByUserId1OrUserId2(user.getId(), user.getId());
+        if (privateChatList != null) {
+            model.addAttribute("privateChatList", privateChatList);
         }
 
         return "im";

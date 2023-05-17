@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <title>Друзья</title>
 </head>
+<!-- Конструкция для всех страниц -->
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+<head th:insert="blocks/server-client :: server-client1"></head>
+<head th:insert="blocks/server-client :: server-client2"></head>
+<!-- *** *** *** *** *** *** *** -->
 <body>
     <div th:insert="blocks/nav-menu :: nav-menu"></div>
     <a href="friends?act=find">Поиск друзей</a>
@@ -13,7 +20,7 @@
             <div class="item">
                 <a th:href="|profile/${user.id}|">
                     <h2 th:utext="|${user.firstName} ${user.lastName}|"></h2>
-                    <h4 th:text="|${user.birthdate}|"></h4>
+                    <h4 th:text="|${user.birthDate}|"></h4>
                 </a>
             </div>
         </div>

@@ -3,7 +3,8 @@ package ru.krizhanovsky.WeChat.models;
 import jakarta.persistence.*;
 
 @Entity
-public class PrivateChats {
+@Table(name = "PrivateChats")
+public class PrivateChat {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -14,10 +15,10 @@ public class PrivateChats {
     @Column(name = "user_id2")
     private long userId2;
 
-    public PrivateChats() {
+    public PrivateChat() {
     }
 
-    public PrivateChats(int user_id1, int user_id2) {
+    public PrivateChat(int user_id1, int user_id2) {
         this.userId1 = user_id1;
         this.userId2 = user_id2;
         // написать создание таблицы с сообщениями

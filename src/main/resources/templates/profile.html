@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <title th:text="|${firstname} ${lastname}|"></title>
 </head>
+<!-- Конструкция для всех страниц -->
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+<head th:insert="blocks/server-client :: server-client1"></head>
+<head th:insert="blocks/server-client :: server-client2"></head>
+<!-- *** *** *** *** *** *** *** -->
 <body>
 
 <div th:insert="blocks/nav-menu :: nav-menu"></div>
@@ -14,7 +21,7 @@
 <div th:if="${online}" style="color: green">В сети</div>
 <div th:if="not ${online}" style="color: grey">Не в сети</div>
 <button th:if="${sendMessage}"><a th:href="|/im?sel=${id}|">Написать сообщение</a></button>
-<button th:if="${no_friend}">Добавить в друзья</button>
+<button th:if="${friend}" th:text="${friend}"></button>
 
 </body>
 </html>

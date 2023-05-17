@@ -3,25 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Добро пожаловать | WECHAT</title>
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/style.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="favicon.ico">
+    <!-- <meta name="robots" content="noindex, nofollow"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-    <h1>Please Log In</h1>
-    <div th:if="${param.error}">
-        Invalid email and password.</div>
-    <div th:if="${param.logout}">
-        You have been logged out.</div>
-    <form action="/login" method="post">
-        <div>
-            <input type="text" name="username" placeholder="Email"/>
+<style th:if="${param.error}">
+    .login__body {
+        border: 1px solid crimson;
+    }
+
+</style>
+
+<!--    <h1>Please Log In</h1>-->
+<!--    <div th:if="${param.error}">-->
+<!--        Invalid email and password.</div>-->
+<!--    <div th:if="${param.logout}">-->
+<!--        You have been logged out.</div>-->
+<!--    <form action="/login" method="post">-->
+<!--        <div>-->
+<!--            <input type="text" name="username" placeholder="Email"/>-->
+<!--        </div>-->
+<!--        <br>-->
+<!--        <div>-->
+<!--            <input type="password" name="password" placeholder="Password"/>-->
+<!--        </div>-->
+<!--        <br>-->
+<!--        <input type="submit" value="Log in"/>-->
+<!--    </form>-->
+
+    <div class="wrapper">
+        <div class="page">
+            <div class="page__login login">
+
+                <div class="login__container">
+                    <div class="login__body">
+                        <h1 class="login__title">Вход</h1>
+                        <form action="/login" method="post" class="login__form form-login">
+                            <input type="text" name="username" class="form-login__input" placeholder="Телефон или email"></br>
+                            <input type="password" name="password" class="form-login__input" placeholder="Пароль"></br>
+                            <button type="submit" class="form-login__btn">Войти</button></br>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <br>
-        <div>
-            <input type="password" name="password" placeholder="Password"/>
-        </div>
-        <br>
-        <input type="submit" value="Log in"/>
-    </form>
+    </div>
+    <script src="js/app.min.js"></script>
 
 </body>
 </html>
