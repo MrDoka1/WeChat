@@ -2,6 +2,7 @@ package ru.krizhanovsky.WeChat.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import ru.krizhanovsky.WeChat.classes.LocalDateTimeToTime;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -45,7 +46,21 @@ public class User {
     }
 
     public boolean isOnline() {
-        return this.lastOnline.until(LocalDateTime.now(), ChronoUnit.SECONDS) < 6;
+        return lastOnline.until(LocalDateTime.now(), ChronoUnit.SECONDS) < 6;
+    }
+    public String timeOnline() {
+        if (lastOnline.until(LocalDateTime.now(), ChronoUnit.SECONDS) < 6) {
+            return "в сети";
+        }
+
+        return "был(а) в " + LocalDateTimeToTime.timeString(lastOnline);
+    }
+
+    public String timeOnlineClass() {
+        if (lastOnline.until(LocalDateTime.now(), ChronoUnit.SECONDS) < 6) {
+            return " --online";
+        }
+        return "";
     }
 
 }

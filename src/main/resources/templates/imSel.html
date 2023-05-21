@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>Мессенджер</title>
     <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" href="css/style.min.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" href="favicon.ico">
     <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <script th:text="
-        |var id = ${id}|">
+    <script th:text="|
+        var id = ${id};
+        let listOnline = ${idList};
+        |">
     </script>
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 
-    <script src="/app.js"></script>
+
 </head>
-<!-- Конструкция для всех страниц -->
-<head th:insert="blocks/server-client :: server-client1"></head>
-<head th:insert="blocks/server-client :: server-client2"></head>
-<!-- *** *** *** *** *** *** *** -->
+
 <body>
 
 <!--<div th:insert="blocks/nav-menu :: nav-menu"></div>-->
@@ -47,38 +47,26 @@
                     </div>
                     <div class="main-page__row">
                         <div class="main-page__chats main-chats">
-                            <div class="main-chats__item item-chat">
+
+                            <div th:class="|main-chats__item item-chat${chat.getActive()}|" th:id="${chat.getId()}" th:each="chat : ${chats}">
                                 <div class="item-chat__column">
-                                    <div class="item-chat__avatar  --online"><img src="img/avatars/main.jfif" alt="Дима"></div>
+                                    <div th:class="|item-chat__avatar ${chat.online}|"><img src="img/avatars/main.jfif" th:alt="${chat.getName()}"></div>
                                 </div>
                                 <div class="item-chat__column">
-                                    <div class="item-chat__name">Дима</div>
-                                    <div class="item-chat__lastMessage">Я в магаз вышел</div>
-                                </div>
-                                <div class="item-chat__column">
-                                    <div class="item-chat__row">
-                                        <div class="item-chat__status"></div>
-                                        <div class="item-chat__time">15:30</div>
-                                    </div>
-                                    <div class="item-chat__qtyMessages"><span>2</span></div>
-                                </div>
-                            </div>
-                            <div class="main-chats__item item-chat --active">
-                                <div class="item-chat__column">
-                                    <div class="item-chat__avatar --online"><img src="img/avatars/main.jfif" alt="Дима"></div>
-                                </div>
-                                <div class="item-chat__column">
-                                    <div class="item-chat__name">Дима</div>
-                                    <div class="item-chat__lastMessage">Я в магаз вышел</div>
+                                    <div class="item-chat__name" th:text="${chat.getName()}"></div>
+                                    <div class="item-chat__lastMessage" th:text="${chat.getLastMessage()}"></div>
                                 </div>
                                 <div class="item-chat__column">
                                     <div class="item-chat__row">
                                         <div class="item-chat__status"></div>
-                                        <div class="item-chat__time">15:30</div>
+                                        <div class="item-chat__time" th:text="${chat.getLastMessageTime()}"></div>
                                     </div>
                                     <div class="item-chat__qtyMessages"><span>2</span></div>
                                 </div>
                             </div>
+
+
+
                         </div>
                     </div>
                     <div class="main-page__newChat"></div>
@@ -86,19 +74,24 @@
 
                 <div class="main-page__column">
                     <div class="main-page__chat chat-main">
-                        <div class="chat-main__nav nav-chat">
+                        <div class="chat-main__nav nav-chat" th:id="${interlocutor.getId()}">
                             <div class="nav-chat__column">
                                 <div class="nav-chat__avatar"><img src="img/avatars/main.jfif" alt="Дима"></div>
                             </div>
                             <div class="nav-chat__column">
                                 <div class="nav-chat__name" th:text="|${interlocutor.firstName} ${interlocutor.lastName}|"></div>
-                                <div class="nav-chat__status --online">last seen just now</div>
+                                <div th:class="|nav-chat__status${interlocutor.timeOnlineClass()}|" th:text="${interlocutor.timeOnline()}"></div>
                             </div>
                         </div>
 
                         <div class="chat-main__body">
 
-
+                            <div th:class="|chat-main__message message-chat ${message.forWho(userId)}|" th:each="message : ${messages}">
+                                <div class="message-chat__body">
+                                    <span class="message-chat__text" th:text="${message.getText()}"></span>
+                                    <div class="message-chat__time" th:text="${message.timeString()}"></div>
+                                </div>
+                            </div>
 
 
 
@@ -132,35 +125,11 @@
     </main>
 </div>
 <script src="js/app.min.js"></script>
+<script src="/app.js"></script>
+<!-- Конструкция для всех страниц -->
+<div th:insert="blocks/server-client :: server-client1"></div>
+<div th:insert="blocks/server-client :: server-client2"></div>
+<!-- *** *** *** *** *** *** *** -->
 
-
-
-<!--<div id="main-content" class="container">-->
-<!--    <div class="row">-->
-
-<!--        <div class="col-md-6">-->
-<!--            <form class="form-inline">-->
-<!--                <div class="form-group">-->
-<!--                    <label for="name">Message:</label>-->
-<!--                    <input type="text" id="name" class="form-control">-->
-<!--                </div>-->
-<!--                <button id="send" class="btn btn-default" type="submit">Send</button>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--        <div class="col-md-12">-->
-<!--            <table id="conversation" class="table table-striped">-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                    <h4><th th:text="|${interlocutor.firstName} ${interlocutor.lastName}|"></th></h4>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody id="greetings">-->
-<!--                </tbody>-->
-<!--            </table>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
 </body>
 </html>

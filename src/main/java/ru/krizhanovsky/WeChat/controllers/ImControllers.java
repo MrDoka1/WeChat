@@ -1,19 +1,22 @@
 package ru.krizhanovsky.WeChat.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.krizhanovsky.WeChat.classes.ChatOutput;
 import ru.krizhanovsky.WeChat.classes.FindPrivateChat;
 import ru.krizhanovsky.WeChat.classes.FindUser;
+import ru.krizhanovsky.WeChat.models.MessageInChat;
 import ru.krizhanovsky.WeChat.models.PrivateChat;
 import ru.krizhanovsky.WeChat.models.User;
+import ru.krizhanovsky.WeChat.repos.MessageInChatRepository;
 import ru.krizhanovsky.WeChat.repos.PrivateChatsRepository;
 import ru.krizhanovsky.WeChat.repos.UsersAuthRepository;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,8 @@ public class ImControllers {
     FindPrivateChat findPrivateChat;
     @Autowired
     PrivateChatsRepository privateChatsRepository;
+    @Autowired
+    MessageInChatRepository messageInChatRepository;
 
     @GetMapping("/im")
     public String im(Model model, Principal principal, @RequestParam(value = "sel", required = false) String sel) {
@@ -36,6 +41,26 @@ public class ImControllers {
         model.addAttribute("userId", user.getId());
         // *** *** *** *** *** *** *** *** ***
 
+        List<PrivateChat> privateChatList = privateChatsRepository.findByUserId1OrUserId2(user.getId(), user.getId());
+
+        // ** Вывод чатиков **
+        if (!privateChatList.isEmpty()) {
+            List<ChatOutput> chatOutputList = new ArrayList<>();
+            for (PrivateChat privateChat: privateChatList) {
+                List<MessageInChat> list = messageInChatRepository.findByChatId(privateChat.getId());
+                chatOutputList.add(new ChatOutput(privateChat, user, list, Long.parseLong(sel)));
+            }
+
+            // ** Лист для обновления статуса **
+            List<Long> idList = new ArrayList<>();
+            for (ChatOutput chat: chatOutputList) {
+                idList.add(chat.getId());
+            }
+            model.addAttribute("idList", idList);
+            // ** ** ** ** ** ** ** ** ** ** ** **
+
+            model.addAttribute("chats", chatOutputList);
+        }
 
         if (sel != null && !sel.isEmpty()) {
             // ** Проверка - является ли чат беседой **
@@ -48,16 +73,16 @@ public class ImControllers {
                 model.addAttribute("interlocutor", userInterlocutorOptional.get());
 
                 long id = findPrivateChat.getPrivateChatId(user.getId(), Long.parseLong(sel));
+
+                // ** Вывод сообщений в чат **
+                List<MessageInChat> messages = messageInChatRepository.findByChatId(id);
+                model.addAttribute("messages", messages);
+
                 if (id != 0) {
                     model.addAttribute("id", id);
                     return "imSel";
                 }
             }
-        }
-
-        List<PrivateChat> privateChatList = (List<PrivateChat>) privateChatsRepository.findByUserId1OrUserId2(user.getId(), user.getId());
-        if (privateChatList != null) {
-            model.addAttribute("privateChatList", privateChatList);
         }
 
         return "im";
