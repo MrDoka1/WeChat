@@ -88,7 +88,7 @@
 
                             <div th:class="|chat-main__message message-chat ${message.forWho(userId)}|" th:each="message : ${messages}">
                                 <div class="message-chat__body">
-                                    <span class="message-chat__text" th:text="${message.getText()}"></span>
+                                    <span class="message-chat__text" th:utext="${message.getAndReplaceText()}"></span>
                                     <div class="message-chat__time" th:text="${message.timeString()}"></div>
                                 </div>
                             </div>

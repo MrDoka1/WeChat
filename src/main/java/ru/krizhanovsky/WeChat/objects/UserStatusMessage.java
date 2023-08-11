@@ -1,9 +1,13 @@
 package ru.krizhanovsky.WeChat.objects;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 
+@Data
 public class UserStatusMessage {
     private ArrayList<Long> arrayListUsers; // Для обновления статусов пользователей
+    private Long getMaessage;
 
     public UserStatusMessage() {
     }
@@ -12,11 +16,4 @@ public class UserStatusMessage {
         this.arrayListUsers = arrayListUsers;
     }
 
-    public ArrayList<Long> getArrayListUsers() {
-        return arrayListUsers;
-    }
-
-    public void setArrayListUsers(ArrayList<Long> arrayListUsers) {
-        this.arrayListUsers = arrayListUsers;
-    }
 }

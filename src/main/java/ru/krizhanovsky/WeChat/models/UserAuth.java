@@ -31,8 +31,9 @@ public class UserAuth {
     public UserAuth() {
     }
 
-    public UserAuth(String email, String password) {
+    public UserAuth(String email, String password, User user) {
         this.email = email;
         this.password = password;
+        this.user = user;
     }
 }

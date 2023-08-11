@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import ru.krizhanovsky.WeChat.classes.LocalDateTimeToTime;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Set;
 
 // ***** База данных с информацией о пользователях *****
 @Entity
@@ -44,6 +44,14 @@ public class User {
         this.lastOnline = LocalDateTime.now();
         this.privateProfile = privateProfile;
     }
+    public User(String firstName, String lastName, String birthDate, boolean privateProfile) {
+        this.nick = String.valueOf(this.getId());
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.lastOnline = LocalDateTime.now();
+        this.privateProfile = privateProfile;
+    }
 
     public boolean isOnline() {
         return lastOnline.until(LocalDateTime.now(), ChronoUnit.SECONDS) < 6;
@@ -61,6 +69,10 @@ public class User {
             return " --online";
         }
         return "";
+    }
+
+    public long getAge() {
+        return ChronoUnit.YEARS.between(LocalDate.parse(birthDate), LocalDate.now());
     }
 
 }

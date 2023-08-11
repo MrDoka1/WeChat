@@ -33,6 +33,10 @@ public class MessageInChat {
         this.time = time;
     }
 
+    public String getAndReplaceText() {
+        return this.text.replace("\n", "<br>");
+    }
+
     public String forWho(long id) {
         if (senderId == id) {
             return "_for-them";

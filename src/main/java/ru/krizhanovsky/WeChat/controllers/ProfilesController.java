@@ -51,7 +51,7 @@ public class ProfilesController {
         model.addAttribute("lastname", userProfile.get().getLastName());
         model.addAttribute("birthdate", userProfile.get().getBirthDate());
         model.addAttribute("date", LocalDate.now());
-        model.addAttribute("age", ChronoUnit.YEARS.between(LocalDate.parse(userProfile.get().getBirthDate()), LocalDate.now()));
+        model.addAttribute("age", userProfile.get().getAge());
         model.addAttribute("online", true);
         if (!userProfile.get().getId().equals(user.getId())) {
             model.addAttribute("online", userProfile.get().isOnline());

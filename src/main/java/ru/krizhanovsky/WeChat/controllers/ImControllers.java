@@ -48,7 +48,7 @@ public class ImControllers {
             List<ChatOutput> chatOutputList = new ArrayList<>();
             for (PrivateChat privateChat: privateChatList) {
                 List<MessageInChat> list = messageInChatRepository.findByChatId(privateChat.getId());
-                chatOutputList.add(new ChatOutput(privateChat, user, list, Long.parseLong(sel)));
+                chatOutputList.add(new ChatOutput(privateChat, user, list, sel != null ? Long.parseLong(sel) : 0));
             }
 
             // ** Лист для обновления статуса **

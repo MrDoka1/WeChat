@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Регистрация | WECHAT</title>
+	<meta charset="UTF-8">
+	<meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/auth_page1.css">
+	<link rel="shortcut icon" href="favicon.ico">
+	<!-- <meta name="robots" content="noindex, nofollow"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<script th:text="|let email = ${email};|"></script>
+
+<body>
+	<div class="wrapper">
+		<div class="page">
+			<div class="page__auth auth">
+				<div class="auth__container">
+					<div class="auth__body">
+						<h1 class="auth__titel">Регистрация</h1>
+						<form action="/auth_next" method="post" class="auth__form form-auth">
+							<input type="text" class="form-auth__input email" name="email" placeholder="Телефон или email" th:value="${inputEmail}" disabled></br>
+                            <input type="password" class="form-auth__input password" name="password" placeholder="Пароль"></br>
+                            <input type="password" class="form-auth__input copy-password" name="copyPassword" placeholder="Повторите пароль"></br>
+                            <input type="text" class="form-auth__input firstname" name="firstname" placeholder="Имя"></br>
+                            <input type="text" class="form-auth__input lastname" name="lastname" placeholder="Фамилия"></br>
+                            <input type="date" class="form-auth__input birthdate" name="birthdate" data-placeholder="Дата рождения" required aria-required="true"></br>
+							<button class="form-auth__btn">Зарегистрироваться</button></br>
+                            <div class="form-auth__agreements">Нажимая «Продолжить», вы принимаете <a href="#">пользовательское соглашение</a> и <a href="#">политику конфиденциальности</a></div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script src="js/auth_page1.js"></script>
+	<script src="js/app.min.js"></script>
+</body>
+
+</html>
