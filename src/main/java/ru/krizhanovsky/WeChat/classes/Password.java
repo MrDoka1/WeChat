@@ -1,7 +1,9 @@
 package ru.krizhanovsky.WeChat.classes;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Password {
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
 

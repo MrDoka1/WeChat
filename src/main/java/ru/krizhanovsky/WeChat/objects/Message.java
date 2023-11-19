@@ -9,7 +9,7 @@ public class Message {
     private String content;
 
     public Message(Long chatId, String content) {
-        this.chatId =chatId;
+        this.chatId = chatId;
         this.content = content;
     }
 }

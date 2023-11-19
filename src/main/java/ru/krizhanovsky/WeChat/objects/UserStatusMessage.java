@@ -7,7 +7,7 @@ import java.util.ArrayList;
 @Data
 public class UserStatusMessage {
     private ArrayList<Long> arrayListUsers; // Для обновления статусов пользователей
-    private Long getMaessage;
+    private Long getMessage;
 
     public UserStatusMessage() {
     }

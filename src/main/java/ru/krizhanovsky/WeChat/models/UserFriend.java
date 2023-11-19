@@ -9,18 +9,22 @@ public class UserFriend {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "user_id")
+
+    @ManyToOne
+    @JoinColumn
+    private User user;
     // тот, кто отправляет заявку
-    private Long userId;
-    @Column(name = "friend_id")
+
+    @ManyToOne
+    @JoinColumn
+    private User friend;
     //тот, кому отправили заявку
-    private Long friendId;
 
     public UserFriend() {
     }
 
-    public UserFriend(Long userId, Long friendId) {
-        this.userId = userId;
-        this.friendId = friendId;
+    public UserFriend(User user, User friend) {
+        this.user = user;
+        this.friend = friend;
     }
 }

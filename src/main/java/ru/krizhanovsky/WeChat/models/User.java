@@ -17,13 +17,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "url_photo")
+    private String urlPhoto;
+
     private String nick;
 
     @Column(name = "first_name")
-    private String firstName;
+    private String firstname;
 
     @Column(name = "last_name")
-    private String lastName;
+    private String lastname;
 
     @Column(name = "birth_date")
     private String birthDate;
@@ -36,18 +39,18 @@ public class User {
     public User() {
     }
 
-    public User(String nick, String firstName, String lastName, String birthDate, boolean privateProfile) {
+    public User(String nick, String firstname, String lastname, String birthDate, boolean privateProfile) {
         this.nick = nick;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.birthDate = birthDate;
         this.lastOnline = LocalDateTime.now();
         this.privateProfile = privateProfile;
     }
-    public User(String firstName, String lastName, String birthDate, boolean privateProfile) {
+    public User(String firstname, String lastname, String birthDate, boolean privateProfile) {
         this.nick = String.valueOf(this.getId());
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.birthDate = birthDate;
         this.lastOnline = LocalDateTime.now();
         this.privateProfile = privateProfile;

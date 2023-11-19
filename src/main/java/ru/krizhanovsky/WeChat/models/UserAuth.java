@@ -3,10 +3,6 @@ package ru.krizhanovsky.WeChat.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Set;
-
 // ***** База данных для аутентификации пользователей *****
 @Entity
 @Data
@@ -23,7 +19,7 @@ public class UserAuth {
     private String password;
 
 //    @ElementCollection(targetClass = Role.class, fetch = FetchType.LAZY)
-//    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+//    @CollectionTable(name = "user_role", joinColumns = @Column(name = "user_id"))
 //    @Enumerated(EnumType.STRING)
 //    private Set<Role> role;
 

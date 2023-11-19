@@ -1,23 +1,45 @@
 package ru.krizhanovsky.WeChat.config;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ru.krizhanovsky.WeChat.servises.UserService;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@CrossOrigin(origins = "http://localhost:3000")
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
     @Resource
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
     @Bean
     public DaoAuthenticationProvider authProvider() {
@@ -37,25 +59,60 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    @CrossOrigin(origins = "http://localhost:3000")
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
 
-                    .requestMatchers("/auth", "/auth_next", "/login", "/css/**", "/js/**", "/messages/**").permitAll()
+                    .requestMatchers("/auth", "/auth_next", "/login", "/css/**", "/js/**", "/check/authorization", "/registration").permitAll()
 
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
                     .loginPage("/login")
-                    .defaultSuccessUrl("/profile") // Поменять
+                    //.defaultSuccessUrl("/profile") // Поменять
+                    .successHandler(successHandler(http))
+                    .failureHandler(failureHandler())
                 .and()
                     .logout()
                     .deleteCookies("JSESSIONID")
                     .permitAll();
+        //http.csrf().csrfTokenRepository(csrfTokenRepository()).and().addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
+        http.cors(withDefaults());
 
         http.csrf().disable();
 
 
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://192.168.1.69:3000", "http://192.168.0.103:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    private AuthenticationSuccessHandler successHandler(HttpSecurity http) {
+        return new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+                httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+                httpServletResponse.setStatus(200);
+            }
+        };
+    }
+
+    private AuthenticationFailureHandler failureHandler() {
+        return new AuthenticationFailureHandler() {
+            @Override
+            public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
+                httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+                httpServletResponse.setStatus(501);
+            }
+        };
     }
 }

@@ -9,11 +9,14 @@ import ru.krizhanovsky.WeChat.models.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
-public interface UsersRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<User, Long> {
     List<User> findByNick(String nick);
 
     @Transactional
     @Modifying
     @Query("update User u set u.lastOnline = :online where u.id = :id")
     void updateUserLastOnline(@Param("online") LocalDateTime online, @Param("id") Long id);
+
+    @Query("select u.lastOnline from User u where u.id = :id")
+    LocalDateTime findLastOnlineById(long id);
 }

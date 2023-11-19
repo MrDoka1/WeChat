@@ -53,6 +53,5 @@ if (phone){
 
 document.querySelector(".form-auth__btn").addEventListener("click", function (event) {
     const value = document.querySelector('.form-auth__input').value;
-    console.log(value)
-    event.preventDefault()
+    //event.preventDefault()
 })

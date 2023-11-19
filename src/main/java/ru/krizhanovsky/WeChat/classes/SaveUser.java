@@ -1,39 +1,36 @@
 package ru.krizhanovsky.WeChat.classes;
 
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.krizhanovsky.WeChat.models.User;
 import ru.krizhanovsky.WeChat.models.UserAuth;
-import ru.krizhanovsky.WeChat.repos.UsersAuthRepository;
-import ru.krizhanovsky.WeChat.repos.UsersRepository;
+import ru.krizhanovsky.WeChat.repos.UserAuthRepository;
+import ru.krizhanovsky.WeChat.repos.UserRepository;
 
 @Service
+@RequiredArgsConstructor
 public class SaveUser {
-    @Autowired
-    private UsersAuthRepository usersAuthRepository;
-    @Autowired
-    private UsersRepository usersRepository;
-
-    public SaveUser() {
-    }
+    private final UserAuthRepository userAuthRepository;
+    private final UserRepository userRepository;
+    private final Password encoder;
 
     @Transactional
     public void saveUser(String nick, String firstName, String lastName, String birthDate,
                          String email, String password) {
-        User user = new User();
+        // Не сделано
     }
     @Transactional
     public void saveUser(String firstName, String lastName, String birthDate,
                          String email, String password) {
         User user = new User(firstName, lastName, birthDate, false);
-        UserAuth userAuth = new UserAuth(email, password, user);
+        UserAuth userAuth = new UserAuth(email, encoder.encodePassword(password), user);
         save(user, userAuth);
     }
 
     // ** Сохранение в бд **
     private void save(User user, UserAuth userAuth) {
-        usersAuthRepository.save(userAuth);
-        usersRepository.save(user);
+        userAuthRepository.save(userAuth);
+        userRepository.save(user);
     }
 }

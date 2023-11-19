@@ -79,7 +79,7 @@
                                 <div class="nav-chat__avatar"><img src="img/avatars/main.jfif" alt="Дима"></div>
                             </div>
                             <div class="nav-chat__column">
-                                <div class="nav-chat__name" th:text="|${interlocutor.firstName} ${interlocutor.lastName}|"></div>
+                                <div class="nav-chat__name" th:text="|${interlocutor.getFirstname} ${interlocutor.getLastname}|"></div>
                                 <div th:class="|nav-chat__status${interlocutor.timeOnlineClass()}|" th:text="${interlocutor.timeOnline()}"></div>
                             </div>
                         </div>
