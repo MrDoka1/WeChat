@@ -7,13 +7,16 @@ import ru.krizhanovsky.WeChat.classes.Friend;
 import ru.krizhanovsky.WeChat.models.User;
 import ru.krizhanovsky.WeChat.models.UserFriend;
 import ru.krizhanovsky.WeChat.repos.UserFriendRepository;
+import ru.krizhanovsky.WeChat.repos.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class FriendService {
     private final UserFriendRepository userFriendRepository;
+    private final UserRepository userRepository;
 
     public Friend getFriend(User user, User friend) {
         UserFriend userFriend = userFriendRepository.findByUserAndFriend(user, friend);
@@ -53,5 +56,12 @@ public class FriendService {
 
     public List<Long> getSubscribers(User user) {
         return userFriendRepository.getSubscribersIds(user);
+    }
+
+    public HashSet<Long> getSearchUsersIds(User user) {
+        HashSet<Long> search = userRepository.getSearchIdsUsers(user);
+        this.getFriendsIds(user).forEach(search::remove);
+        this.getSubscribers(user).forEach(search::remove);
+        return search;
     }
 }

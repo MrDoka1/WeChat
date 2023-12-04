@@ -17,7 +17,7 @@ public class ChatService {
     private final ChatUserService chatUserService;
 
     public Chat getChat(long id) {
-        return chatRepository.findById(id).orElseThrow();
+        return chatRepository.findById(id).orElse(null);
     }
     public List<Chat> getChats(User user) {
         List<ChatUser> chatUserList = chatUserService.getChatUsers(user);

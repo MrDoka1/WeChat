@@ -23,11 +23,10 @@ public class ChatMessageKafkaListener {
     )
     public void listen(ConsumerRecord<String, String> record) {
         ChatMessageKafka message = gson.fromJson(record.value(), ChatMessageKafka.class);
-        System.out.println(message.getTimeStamp());
 
         // Написать фильтрацию на дилог и чат
-        /*System.out.println("sending via kafka listener.." + message.getSenderId() + message.getChat());
-        template.convertAndSend("/topic/group", message);*/
+        System.out.println("sending via kafka listener.." + message.getSenderId() + message.getChat());
+        template.convertAndSend("/topic/group", message);
     }
 
 }

@@ -12,6 +12,7 @@ import ru.krizhanovsky.WeChat.servises.FriendService;
 import ru.krizhanovsky.WeChat.servises.UserService;
 
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -71,5 +72,12 @@ public class FriendsController {
         }
         User user = userService.getUser(id);
         return friendService.getSubscribers(user);
+    }
+
+    @GetMapping("/friends/search")
+    public HashSet<Long> search(Principal principal, HttpServletResponse httpServletResponse) {
+        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        User user = userService.getUser(principal.getName());
+        return friendService.getSearchUsersIds(user);
     }
 }

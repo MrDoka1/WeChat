@@ -2,6 +2,7 @@ package ru.krizhanovsky.WeChat.controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -71,6 +72,14 @@ public class AuthController {
         }
 
         return false;
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Object> logout(HttpServletResponse httpServletResponse) {
+        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+
+
+        return null;
     }
 }
 

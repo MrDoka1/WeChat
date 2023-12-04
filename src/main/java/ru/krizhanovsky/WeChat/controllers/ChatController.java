@@ -2,6 +2,7 @@ package ru.krizhanovsky.WeChat.controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ import ru.krizhanovsky.WeChat.servises.UserService;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -53,29 +55,45 @@ public class ChatController {
 
     @PostMapping("/chat")
     public ChatOutput chat(Principal principal, HttpServletResponse httpServletResponse, @RequestParam(value = "ids") List<Long> idList,
-                           @RequestParam(value = "name") String name, @RequestParam(value = "isPrivate") boolean isPrivate,
-                           @RequestParam("url") String urlPhoto) {
-        User user = userService.getUser(principal.getName());
-        Chat chat = new Chat(name, urlPhoto, user, LocalDateTime.now(), isPrivate);
-
+                                          @RequestParam(value = "name") String name, @RequestParam(value = "isPrivate") boolean isPrivate,
+                                          @RequestParam("url") String urlPhoto) {
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        User user = userService.getUser(principal.getName());
+
+        if (name.replaceAll(" ", "").equals("")) {
+            httpServletResponse.setStatus(400);
+            return null;
+        }
+
+        Chat chat = new Chat(name, urlPhoto, user, LocalDateTime.now(), isPrivate);
         return creatorChat.create(chat, idList);
     }
 
     @GetMapping("/chat/users")
-    public List<ChatUsersDTOResponse> chatUsers(Principal principal, HttpServletResponse httpServletResponse, @RequestParam Long chatId) {
+    public Object chatUsers(Principal principal, HttpServletResponse httpServletResponse, @RequestParam Long chatId) {
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
         User user = userService.getUser(principal.getName());
         Chat chat = chatService.getChat(chatId);
+        // Если чат не существует
+        if (chat == null) {
+            httpServletResponse.setStatus(400);
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("message", "chatId is invalid");
+            return hashMap;
+        }
+        // Если пользователь не состоит в этом чате
         if (!chatUserService.userConsistsOfChat(user, chat)) {
             httpServletResponse.setStatus(403);
-            return null;
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("message", "user not consists in chat");
+            return hashMap;
         }
         List<ChatUser> list = chatUserService.getChatUsers(chat);
         List<ChatUsersDTOResponse> responseList = new ArrayList<>();
         for (ChatUser chatUser : list) {
             responseList.add(new ChatUsersDTOResponse(chatUser.getUser().getId(), chatUser.getRole()));
         }
+        // return List<ChatUsersDTOResponse>
         return responseList;
     }
 

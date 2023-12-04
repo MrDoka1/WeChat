@@ -88,7 +88,9 @@ public class MessagesController {
     }
 
     @PostMapping(value = "/message")
-    public ResponseEntity<String> addMessage(Principal principal, @RequestParam String chat, @RequestParam String text) {
+    public ResponseEntity<String> addMessage(Principal principal, @RequestParam String chat, @RequestParam String text,
+                                             HttpServletResponse httpServletResponse) {
+        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
         ChatMessageKafka messageKafka = new ChatMessageKafka(userService.getUser(principal.getName()).getId(),
                 chat, text, LocalDateTime.now());
         try {
@@ -96,7 +98,8 @@ public class MessagesController {
             kafkaTemplate.send(KafkaConstants.KAFKA_TOPIC, gson.toJson(messageKafka)).get();
             return new ResponseEntity<>("the message was successfully delivered", HttpStatus.OK);
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
