@@ -24,18 +24,20 @@ public class MessageService {
         return messageRepository.findLastByDialog(dialog);
     }
 
-    public void addMessage(ChatMessageKafka chatMessageKafka) {
+    public Message addMessage(ChatMessageKafka chatMessageKafka) {
         User sender = userService.getUser(chatMessageKafka.getSenderId());
         if (chatMessageKafka.getChat().charAt(0) == 'c') {
             long chatId = Long.parseLong(chatMessageKafka.getChat().substring(1));
             Chat chat = chatService.getChat(chatId);
             Message message = new Message(chat, sender, chatMessageKafka.getText(), chatMessageKafka.getTimeStamp());
             messageRepository.save(message);
+            return message;
         } else {
             User user = userService.getUser(Long.parseLong(chatMessageKafka.getChat()));
             Dialog dialog = dialogService.getDialog(sender, user);
             Message message = new Message(dialog, sender, chatMessageKafka.getText(), chatMessageKafka.getTimeStamp());
             messageRepository.save(message);
+            return message;
         }
     }
 

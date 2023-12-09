@@ -18,7 +18,10 @@ public class DialogService {
     public Dialog getDialog(User user1, User user2) {
         Dialog dialog = dialogRepository.findByUser1AndUser2(user1, user2);
         if (dialog == null) {
-            return dialogRepository.findByUser1AndUser2(user2, user1);
+            dialog = dialogRepository.findByUser1AndUser2(user2, user1);
+            if (dialog == null) {
+                return dialogRepository.save(new Dialog(user1, user2));
+            }
         }
         return dialog;
     }
