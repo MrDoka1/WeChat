@@ -30,13 +30,10 @@ public class ChatMessageKafkaListener {
 
         // Фильтрация на дилог и чат
         if (message.getChat().charAt(0) == 'c') {
-            System.out.println("/topic/chat/" + message.getChat());
             template.convertAndSend(("/topic/chat/" + message.getChat()), messageOutput);
         } else {
-            System.out.println(message.getSenderId()+ " " + message.getChat());
             String topic = Math.min(message.getSenderId(), Long.parseLong(message.getChat())) + "_" +
                     Math.max(message.getSenderId(), Long.parseLong(message.getChat()));
-            System.out.println("/topic/dialog/" + topic);
             template.convertAndSend(("/topic/dialog/" + topic), messageOutput);
         }
     }

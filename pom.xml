@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ru.krizhanovsky</groupId>
 	<artifactId>WeChat</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.4</version>
 	<name>WeChat</name>
 	<description>ChatMessenger by Krizhanovsky</description>
 	<properties>
@@ -255,14 +255,6 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>com.baeldung.spring.kafka.KafkaApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
